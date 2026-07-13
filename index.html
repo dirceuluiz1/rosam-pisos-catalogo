@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rosam Pisos - Catálogo Online</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        header {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .logo-section h1 {
+            font-size: 26px;
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+        
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s;
+            font-size: 14px;
+        }
+        
+        .whatsapp-btn:hover {
+            background: #20ba5a;
+        }
+        
+        .search-bar {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            margin-bottom: 15px;
+            font-family: inherit;
+        }
+        
+        .search-bar:focus {
+            outline: none;
+            border-color: #d4a574;
+            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+        }
+        
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        
+        .filter-btn {
+            padding: 8px 14px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        
+        .filter-btn:hover {
+            border-color: #d4a574;
+            background: #fafafa;
+        }
+        
+        .filter-btn.active {
+            background: #d4a574;
+            color: white;
+            border-color: #d4a574;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+        }
+        
+        .hero h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .hero p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .result-count {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border: 1px solid #f0f0f0;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: #f0f0f0;
+            display: block;
+        }
+        
+        .product-info {
+            padding: 12px;
+        }
+        
+        .product-category {
+            display: inline-block;
+            background: #d4a574;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+        
+        .product-name {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+            min-height: 36px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .product-btn {
+            width: 100%;
+            background: #25D366;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            transition: background 0.3s;
+            font-size: 13px;
+        }
+        
+        .product-btn:hover {
+            background: #20ba5a;
+        }
+        
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .empty-state p {
+            font-size: 16px;
+            color: #999;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state button {
+            background: #d4a574;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 40px 20px;
+            margin-top: 50px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 15px;
+            color: #d4a574;
+            font-weight: 700;
+        }
+        
+        .footer-section p {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .footer-section a {
+            color: #d4a574;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .footer-section a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #34495e;
+            font-size: 13px;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h2 {
+                font-size: 24px;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 12px;
+            }
+            
+            .product-image {
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo-section">
+                <h1>🏠 Rosam Pisos</h1>
+                <a href="https://wa.me/5566926565920?text=Olá!%20Gostaria%20de%20mais%20informações%20sobre%20os%20pisos%20da%20Rosam%20Pisos." class="whatsapp-btn" target="_blank">📱 (66) 9265-6592</a>
+            </div>
+            <input type="text" id="searchInput" class="search-bar" placeholder="Buscar por nome, tamanho ou tipo de piso...">
+            <div class="filters" id="filters"></div>
+            <div class="result-count" id="resultCount"></div>
+        </div>
+    </header>
+    
+    <div class="hero">
+        <h2>Catálogo de Pisos Premium</h2>
+        <p>Qualidade, Variedade e Elegância para seus Espaços</p>
+    </div>
+    
+    <div class="container">
+        <div class="products-grid" id="productsGrid"></div>
+    </div>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Rosam Pisos</h3>
+                <p>Catálogo completo de pisos e revestimentos de alta qualidade para residências e comércios.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Categorias</h3>
+                <div id="categoriesList"></div>
+            </div>
+            <div class="footer-section">
+                <h3>Contato</h3>
+                <p><strong>WhatsApp:</strong> (66) 9265-6592</p>
+                <a href="https://wa.me/5566926565920?text=Olá!%20Gostaria%20de%20mais%20informações%20sobre%20os%20pisos%20da%20Rosam%20Pisos." target="_blank" class="whatsapp-btn">Enviar Mensagem</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Rosam Pisos. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+    
+    <script>
+        const products = [{"id": 1, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776867145389-gv4034mzqct.jpg", "description": "RT86145- PISO RET 86X86  BRONX SATINY MAG", "category": "Outros"}, {"id": 2, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776867141845-cn1382pjlin.jpg", "description": "PISO RET POLIDO 85X85  PACIFIC BLUE LUX MAG  (2,16M\u00b2) 85147", "category": "Azul"}, {"id": 3, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776867135618-epzs16q3pbb.jpg", "description": "RT86145- PISO RET 86X86  BRONX SATINY MAG", "category": "Outros"}, {"id": 4, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776866535653-9xvrzj0p32.jpg", "description": "PISO 70X70 RET PR7081  POLIDO (3,43M\u00b2)", "category": "Outros"}, {"id": 5, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776866534532-k4resvg9fsh.jpg", "description": "PISO RET 70X70 PEDRA  NOCE (SAFE STEP) 3,43M2 7PC", "category": "Outros"}, {"id": 6, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776866532284-ito4wbo269.jpg", "description": "PISO 70X70 RET CINZA URBANO SAFE STEP", "category": "Cinza"}, {"id": 7, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776866530817-yvcqypy5r7.jpg", "description": "HD GRAFITTE RET 82X82 POL  RT 812399 ROCHAMAX  (2.70M\u00b2)", "category": "Outros"}, {"id": 8, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776866529747-thhb95p2ip.jpg", "description": "Descri\u00e7\u00e3o:  HD CREMA 82X82 POL RT  (2.70M\u00b2) ROCHAMAXX", "category": "Claro"}, {"id": 9, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776866528759-rqfsdbvn7g.jpg", "description": "MARMO NERO 82x82 POL RT (2.70M\u00b2) 813452 ROCHAMAXX", "category": "Preto"}, {"id": 10, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776865722477-d3nkf3bhu9.jpg", "description": "BIANCO SUPREME 82x82 POL  RT (2.70M\u00b2) ROCHAMAXX", "category": "Claro"}, {"id": 11, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776865536228-o9bf2pqicdm.jpg", "description": "CALACATA BLUE 82x82 POL RT  (2.70M\u00b2)  ROCHAMAXX", "category": "Marmorizado"}, {"id": 12, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776686217457-v7bc9n4sh5o.jpg", "description": "67015- Crema Marfil (60x60)", "category": "Claro"}, {"id": 13, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776686215756-opgfzktk63n.jpg", "description": "67012- Bramante (60x60)", "category": "Outros"}, {"id": 14, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776686214761-41kec8y5a3a.jpg", "description": "67004- Alt\u00edssimo Cinza (60x60)", "category": "Cinza"}, {"id": 15, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776686213129-jk20mx2hsrn.jpg", "description": "67002- Avorio (60x60)", "category": "Claro"}, {"id": 16, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776686211958-ckeo10ursyu.jpg", "description": "67003- Bianco Oro (60x60)", "category": "Claro"}, {"id": 17, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776686210935-omhzwczeyt.jpg", "description": "60321- Pedra Goi\u00e1s (60x60)", "category": "Outros"}, {"id": 18, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685994980-kr3qc7gwcu.jpg", "description": "60332- Pietra Santa (60x60)", "category": "Outros"}, {"id": 19, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685992495-65yxtvbwj5v.jpg", "description": "60319- Duran Grafite (60x60)", "category": "Cinza"}, {"id": 20, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685991391-ulybc86qwia.jpg", "description": "60317- Zermatt (60x60)", "category": "Outros"}, {"id": 21, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685990492-5x3nsi5vjmr.jpg", "description": "60329- Soneto (60x60)", "category": "Outros"}, {"id": 22, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685989761-3isio4k0wnr.jpg", "description": "60316- Splendor (60x60)", "category": "Outros"}, {"id": 23, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685988251-ahdcmxlbmkk.jpg", "description": "60305- Artisan (60x60)", "category": "Outros"}, {"id": 24, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685986457-zxwx9hvenc.jpg", "description": "60327- Algarve (60x60)", "category": "Outros"}, {"id": 25, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685698545-nqg7o4wbr7.jpg", "description": "60304- London (60x60)", "category": "Outros"}, {"id": 26, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685696874-1j4l0lx387u.jpg", "description": "60306- Arbor (60x60)", "category": "Outros"}, {"id": 27, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685697766-uhtbbooyw7.jpg", "description": "60328- Spazio (60x60)", "category": "Outros"}, {"id": 28, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685572000-vs5ns8csjp.jpg", "description": "60116- Supreme (60x60)", "category": "Claro"}, {"id": 29, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685572778-rr6qyvfg65.jpg", "description": "60330- Elegance (60x60)", "category": "Outros"}, {"id": 30, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685571265-0n16k1ogz0p9.jpg", "description": "60098- Himalaia (60x60)", "category": "Outros"}, {"id": 31, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685570504-aebyg19wvt5.jpg", "description": "67001- Himalaia (60x60)", "category": "Outros"}, {"id": 32, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685313253-8x6k76j9y0y.jpg", "description": "60315- Egeo (60x60)", "category": "Outros"}, {"id": 33, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685253339-5pjxdj3ngsh.jpg", "description": "60117- London (60x60)", "category": "Outros"}, {"id": 34, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685221431-i2pwwhobpij.jpg", "description": "60111- Vogue (60x60)", "category": "Outros"}, {"id": 35, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685174971-0puujxz7ofm.jpg", "description": "60313- Bernini (60x60)", "category": "Outros"}, {"id": 36, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685175686-5mbu39ia0u3.jpg", "description": "60314- Boreal (60x60)", "category": "Outros"}, {"id": 37, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685174295-l5x9sldpz2d.jpg", "description": "60031- Michelangelo (60x60)", "category": "Outros"}, {"id": 38, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776685018088-cj6ubagmxi.jpg", "description": "75040- Lumina Beige (75x75)", "category": "Outros"}, {"id": 39, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776684987093-lgfj3s5nkse.jpg", "description": "75041- Solare Lux (75x75)", "category": "Outros"}, {"id": 40, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776684958014-89ocbbeh3g.jpg", "description": "75034- Apuano (75x75)", "category": "Outros"}, {"id": 41, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776684934384-qdttws0rog.jpg", "description": "75005- Cosmuz (75x75)", "category": "Outros"}, {"id": 42, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776684911185-gubkdmp2qfi.jpg", "description": "75035- Athea (75x75)", "category": "Outros"}, {"id": 43, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776684876830-btbdv0xg57.jpg", "description": "75013- \u00d4nix Silver (75x75)", "category": "Outros"}, {"id": 44, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776684844524-mr5d1vuuo1h.jpg", "description": "75027- \u00d4nix Black (75x75)", "category": "Preto"}, {"id": 45, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776684807733-5gvgbxz6aam.jpg", "description": "75032- Black Gold (75x75)", "category": "Preto"}, {"id": 46, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776684670584-vspx3e030hc.jpg", "description": "75014- \u00d4nix Pink (75x75)", "category": "Outros"}, {"id": 47, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776684669040-zqizts9hu17.jpg", "description": "75031- Alaska (75x75)", "category": "Outros"}, {"id": 48, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776684669820-0hkme0lcri5.jpg", "description": "75007- \u00d4nix Blue (75x75)", "category": "Azul"}, {"id": 49, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776684668249-hqzwpn42xv4.jpg", "description": "75009- Patag\u00f4nia (75x75)", "category": "Outros"}, {"id": 50, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776684667308-v7m71woy4p.jpg", "description": "75030- Magestic (75x75)", "category": "Outros"}, {"id": 51, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776683885822-yx9hx0lmcvr.jpg", "description": "67019- Lumine Gold (60x60)", "category": "Dourado"}, {"id": 52, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776683839947-aljdkp2bm29.jpg", "description": "67013- Mirage (60x60)", "category": "Outros"}, {"id": 53, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776683716255-9pxefjn78ra.jpg", "description": "PR7081- Pol (70x70)", "category": "Outros"}, {"id": 54, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776636219234-15meyc5s372i.jpg", "description": "R7044- Brilhante (70x70)", "category": "Outros"}, {"id": 55, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776636191340-zsyy6jw2ywb.jpg", "description": "R7004- Acetinado (70x70)", "category": "Outros"}, {"id": 56, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776636094817-tdxenjlz1oi.jpg", "description": "R7040- Acetinado (70x70)", "category": "Outros"}, {"id": 57, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776636093311-qpzwic9bp7b.jpg", "description": "R7007- Graninha (70x70)", "category": "Outros"}, {"id": 58, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776636092163-6hnxo0064z5.jpg", "description": "R7038- Safe Step (70x70)", "category": "Outros"}, {"id": 59, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776636091092-7sfkwtxhfh6.jpg", "description": "R7018- Safe Step (70x70)", "category": "Outros"}, {"id": 60, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776634939225-l4luct77rj8.jpg", "description": "R7014- Brilhante (70x70)", "category": "Outros"}, {"id": 61, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776634931388-ctyr3a8gvdh.jpg", "description": "R7037- Brilhante (70x70)", "category": "Outros"}, {"id": 62, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776634924358-1mtst9x1p7g.jpg", "description": "PR7096- Pol (70X70)", "category": "Outros"}, {"id": 63, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776634902098-auy8pmvcyzg.jpg", "description": "R7013- Granilha (70x70)", "category": "Outros"}, {"id": 64, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776634248308-cwkuajrohzc.jpg", "description": "75002- Estremoz (75x75)", "category": "Outros"}, {"id": 65, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776634246895-66mkkushi54.jpg", "description": "76008- Portland (76x76)", "category": "Outros"}, {"id": 66, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776634245092-gluj9tp8mqf.jpg", "description": "76031- Alameda (76x76)", "category": "Outros"}, {"id": 67, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776634242516-l4ov7xahuj.jpg", "description": "76040- Solare (76x76)", "category": "Outros"}, {"id": 68, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776634240723-12o8s19rqchb.jpg", "description": "76042- Ceppo (76x76)", "category": "Outros"}, {"id": 69, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776634238322-wx3xtl6bjw.jpg", "description": "76041- Studio Off (76x76)", "category": "Outros"}, {"id": 70, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776634236767-tss7pslhtso.jpg", "description": "76039- Pietra Toscana (76x76)", "category": "Outros"}, {"id": 71, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776634234425-no7jrcx2fm.jpg", "description": "76034- Alaska (76x76)", "category": "Outros"}, {"id": 72, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776634233193-ivhvj2h2kl.jpg", "description": "76035- Sampa Natural (76x76)", "category": "Outros"}, {"id": 73, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776634231145-dzwmkp9p6vq.jpg", "description": "75011- Aspen (75x75)", "category": "Madeira"}, {"id": 74, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776633725975-l41l1yl3vjj.jpg", "description": "75003- Calacata Gold (75x75)", "category": "Marmorizado"}, {"id": 75, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776633724964-ye1tp5x2kq8.jpg", "description": "75036- Desert (75x75)", "category": "Outros"}, {"id": 76, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776633722048-0gzcobf3zz8p.jpg", "description": "75033- Palissandro (75x75)", "category": "Outros"}, {"id": 77, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776633719390-xxleoggjl2.jpg", "description": "75042- Biancatto (75x75)", "category": "Outros"}, {"id": 78, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776633380084-wcraf9byabg.jpg", "description": "75040- Lumina Beige (75x75)", "category": "Outros"}, {"id": 79, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776633366631-uo8qm0ml3h.jpg", "description": "75041- Solare Lux (75x75)", "category": "Outros"}, {"id": 80, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776633303240-ffzimk5cxo.jpg", "description": "75034- Apuano (75x75)", "category": "Outros"}, {"id": 81, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776633299213-8juliwi9288.jpg", "description": "75005- Cosmuz (75x75)", "category": "Outros"}, {"id": 82, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776633294502-xxjjsl2t5wq.jpg", "description": "75035- Athea (75x75)", "category": "Outros"}, {"id": 83, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776633289371-e57q2dtiueq.jpg", "description": "75013- \u00d4nix Silver (75x75)", "category": "Outros"}, {"id": 84, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776632861859-panir2f0o0j.jpg", "description": "75027- \u00d4nix Black (75x75)", "category": "Preto"}, {"id": 85, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776632860163-hnatylpcj4a.jpg", "description": "75032- Black Gold (75x75)", "category": "Preto"}, {"id": 86, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776632857403-t9tzl5ask.jpg", "description": "75014- \u00d4nix Pink (75x75)", "category": "Outros"}, {"id": 87, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776632856272-7afpuhnxh7t.jpg", "description": "75007- \u00d4nix Blue (75x75)", "category": "Azul"}, {"id": 88, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776632854931-891qmcvnvmd.jpg", "description": "75031- Alaska (75x75)", "category": "Outros"}, {"id": 89, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776632652522-54tvzoqfr4p.jpg", "description": "75009- Patag\u00f4nia (75x75)", "category": "Outros"}, {"id": 90, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776632650697-1ofxk83qdth.jpg", "description": "75030- Magestic (75x75)", "category": "Outros"}, {"id": 91, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776632649063-7mq3ca5pnap.jpg", "description": "67019- Lumine Gold (60x60)", "category": "Dourado"}, {"id": 92, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776632647750-7amynj52uid.jpg", "description": "67001- Himalaia (60x60)", "category": "Outros"}, {"id": 93, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776632646480-tm09q81qozb.jpg", "description": "67013- Mirage (60x60)", "category": "Outros"}, {"id": 94, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631978627-df98227mgan.jpg", "description": "69021- Macchia Oro (60x120)", "category": "Dourado"}, {"id": 95, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631978048-4c2tmrdvfl3.jpg", "description": "69502- Ducale Mocha (60x120)", "category": "Outros"}, {"id": 96, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631885372-3a30thwhoet.jpg", "description": "69500- Decormix (60x120)", "category": "Outros"}, {"id": 97, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631768277-h12gjm0bjgu.jpg", "description": "68030- Grey Essence (60x120)", "category": "Cinza"}, {"id": 98, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631766981-hs84vdkw1j.jpg", "description": "68027- Eclipse Oro (60x120)", "category": "Dourado"}, {"id": 99, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631765705-07tq3aesw7e.jpg", "description": "68028- Millenium Nero (60x120)", "category": "Preto"}, {"id": 100, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631764980-bon3psneo17.jpg", "description": "68011- Golden Carbon (60x120)", "category": "Dourado"}, {"id": 101, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631763728-2awwndha01j.jpg", "description": "68020- Onice Luna (60x120)", "category": "Outros"}, {"id": 102, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631763161-00zro2zln3uv.jpg", "description": "68001- Statuario (60x120)", "category": "Marmorizado"}, {"id": 103, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631762584-bglqt6uw25t.jpg", "description": "68025- Taj Mahal (60x120)", "category": "Outros"}, {"id": 104, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631761766-9pa280kpd8i.jpg", "description": "68024- Max Silver (60x120)", "category": "Outros"}, {"id": 105, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631448936-fq4uq4m01h.jpg", "description": "68026- Storm (60x120)", "category": "Outros"}, {"id": 106, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631448037-g0s36jz410m.jpg", "description": "68016- Gold River (60x120)", "category": "Dourado"}, {"id": 107, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631447327-xgr3h89549.jpg", "description": "68005- Aspen (60x120)", "category": "Madeira"}, {"id": 108, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631446783-y27u73ywemi.jpg", "description": "68006- Ombra Di Caravaggio (60x120)", "category": "Marmorizado"}, {"id": 109, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631445884-c74kc6a55lb.jpg", "description": "68004- Marmo Grafite (60x120)", "category": "Cinza"}, {"id": 110, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631444907-n6ct6lim9wd.jpg", "description": "68020- Black Gold (60x120)", "category": "Preto"}, {"id": 111, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631444063-prpxhrdpp7g.jpg", "description": "68017- Machia Oro (60x120)", "category": "Outros"}, {"id": 112, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631443398-zfidfyxi7x.jpg", "description": "68022- Perlato (60x120)", "category": "Outros"}, {"id": 113, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631040942-93og1kaiec.jpg", "description": "37114- Origame Mix (32x57)", "category": "Outros"}, {"id": 114, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776631039283-iwvdbve101l.jpg", "description": "37023- Matine Couto (31x56)", "category": "Outros"}, {"id": 115, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776630888303-kn4t7ta6a3r.jpg", "description": "68017- Machia Oro (60x120)", "category": "Outros"}, {"id": 116, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776630390270-garubw1zgxe.jpg", "description": "29103- Progetto Bege (29x54)", "category": "Outros"}, {"id": 117, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776630002569-5q84h4rosl5.jpg", "description": "31098- Himalaia (31x56)", "category": "Outros"}, {"id": 118, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776629669187-h1bxdhrihmp.jpg", "description": "37109- Origame HD (32x57)", "category": "Outros"}, {"id": 119, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776629549737-gubalk6uxwm.jpg", "description": "31004 Atelier Cinza (31x56)", "category": "Cinza"}, {"id": 120, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776629452084-b7hiz0lwj4d.jpg", "description": "31005- Atelier Blush (31x56)", "category": "Outros"}, {"id": 121, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776629449709-kkuply1wy7l.jpg", "description": "31002- Atelier Branco (31x56)", "category": "Claro"}, {"id": 122, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776629339707-6zvp8gjdtwa.jpg", "description": "37025- Prisma Branco (32x57)", "category": "Claro"}, {"id": 123, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776629337170-s7gkzz9i7n.jpg", "description": "37206- \u00c2mbar (32x57)", "category": "Outros"}, {"id": 124, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776628858351-qhaiy6kmfw.jpg", "description": "Pedra Nobre Safe Step (70x70)", "category": "Outros"}, {"id": 125, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776628807532-6m1kpxlqgl.jpg", "description": "HD Marmo Gris Pol (82x82)", "category": "Marmorizado"}, {"id": 126, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776628731556-x0fkw1qfo5d.jpg", "description": "HD Gran Calacata Pol (82x82)", "category": "Marmorizado"}, {"id": 127, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776628571340-360i9edl2ml.jpg", "description": "PR7081 Pol (70x70)", "category": "Outros"}, {"id": 128, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776628568882-dyw8xcpmpyt.jpg", "description": "Cinza Urbano Safe Step (70x70)", "category": "Cinza"}, {"id": 129, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776628566223-fzu7qnk9w4l.jpg", "description": "HD Grafite Pol (82x82)", "category": "Cinza"}, {"id": 130, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776628564526-7rtqxdokih.jpg", "description": "HD Crema Pol (82x82)", "category": "Claro"}, {"id": 131, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776628563701-dgo7lgqihwg.jpg", "description": "Calacata Blue Pol (82x82)", "category": "Marmorizado"}, {"id": 132, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776628562366-2wkos3ciapc.jpg", "description": "HD Bianco Supreme Pol (82x82)", "category": "Claro"}, {"id": 133, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776628560624-wcbp4kxfqw.jpg", "description": "HD Dommus Pol (82x82)", "category": "Outros"}, {"id": 134, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776628553190-f1xwba66oo4.jpg", "description": "HD Marmo Nero Pol (82x82)", "category": "Preto"}, {"id": 135, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776204117759-9lx2cqkbigi.jpg", "description": "45750 CALCIATTA RIO 45X45  NARDINE (2.57M\u00b2)", "category": "Outros"}, {"id": 136, "image_url": "https://d2xsxph8kpxj0f.cloudfront.net/310419663028832433/Fh8jgszhTZrjzVJyBs3mdr/catalog-photos/1776099989385-x6g7kdjycb.jpg", "description": "60001 Avorio (60x60)", "category": "Claro"}];
+        let filteredProducts = [...products];
+        let selectedCategory = null;
+        
+        const categories = [...new Set(products.map(p => p.category))].sort();
+        
+        function createFilters() {
+            const filtersDiv = document.getElementById('filters');
+            
+            const allBtn = document.createElement('button');
+            allBtn.className = 'filter-btn active';
+            allBtn.textContent = `Todos (${products.length})`;
+            allBtn.onclick = () => {
+                selectedCategory = null;
+                updateDisplay();
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                allBtn.classList.add('active');
+            };
+            filtersDiv.appendChild(allBtn);
+            
+            categories.forEach(cat => {
+                const count = products.filter(p => p.category === cat).length;
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.textContent = `${cat} (${count})`;
+                btn.onclick = () => {
+                    selectedCategory = cat;
+                    updateDisplay();
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                };
+                filtersDiv.appendChild(btn);
+            });
+        }
+        
+        function searchProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            filteredProducts = products.filter(p => {
+                const matchesSearch = p.description.toLowerCase().includes(searchTerm);
+                const matchesCategory = !selectedCategory || p.category === selectedCategory;
+                return matchesSearch && matchesCategory;
+            });
+            
+            updateDisplay();
+        }
+        
+        function updateDisplay() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            
+            if (filteredProducts.length === 0) {
+                grid.innerHTML = '<div class="empty-state"><p>Nenhum produto encontrado</p><button onclick="document.getElementById(\'searchInput\').value = \'\'; selectedCategory = null; filteredProducts = [...products]; updateDisplay(); document.querySelectorAll(\'.filter-btn\').forEach(b => b.classList.remove(\'active\')); document.querySelectorAll(\'.filter-btn\')[0].classList.add(\'active\');">Ver todos os produtos</button></div>';
+            } else {
+                filteredProducts.forEach(product => {
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.innerHTML = `
+                        <img src="${product.image_url}" alt="${product.description}" class="product-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22100%22 height=%22100%22/%3E%3C/svg%3E'">
+                        <div class="product-info">
+                            <span class="product-category">${product.category}</span>
+                            <div class="product-name">${product.description}</div>
+                            <a href="https://wa.me/5566926565920?text=Olá!%20Tenho%20interesse%20no%20produto:%20${encodeURIComponent(product.description)}" target="_blank" class="product-btn">Solicitar Orçamento</a>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+            
+            document.getElementById('resultCount').textContent = `${filteredProducts.length} de ${products.length} produtos`;
+        }
+        
+        function createCategoriesList() {
+            const list = document.getElementById('categoriesList');
+            categories.forEach(cat => {
+                const link = document.createElement('a');
+                link.href = '#';
+                link.textContent = cat;
+                link.onclick = (e) => {
+                    e.preventDefault();
+                    selectedCategory = cat;
+                    updateDisplay();
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.filter-btn').forEach(b => {
+                        if (b.textContent.startsWith(cat)) b.classList.add('active');
+                    });
+                };
+                list.appendChild(link);
+            });
+        }
+        
+        document.getElementById('searchInput').addEventListener('keyup', searchProducts);
+        createFilters();
+        createCategoriesList();
+        updateDisplay();
+    </script>
+</body>
+</html>
